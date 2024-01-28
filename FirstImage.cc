@@ -3,6 +3,8 @@
 
 #include <cmath>
 #include <iostream>
+#include "color.h"
+#include "vec3.h"
 
 using std::cout;
 
@@ -17,19 +19,16 @@ int main()
 
     for (int j = 0; j < imageHeight; j++)
     {
+        std::clog << "\rScanlines still remaining: " << (imageHeight - j) << ' ' << std::flush;
+
         for (int i = 0; i < imageWidth; i++)
         {
-            float r = float(i) / (imageWidth - 1);
-            float g = float(j) / (imageHeight - 1);
-            float b = 0.0;
-
-            int ir = static_cast<int>(255.999 * r);
-            int ig = static_cast<int>(255.999 * g);
-            int ib = static_cast<int>(255.999 * b);
-
-            cout << i << ' ' << j << ' ' << 0 << '\n';
+            auto pixelColor = color(double(i) / (imageWidth - 1), double(j) / (imageHeight - 1), 0);
+            writeColor(cout, pixelColor);
         }
     }
+
+    std::clog << "\rDone.\n";
 
     return 0;
 }
