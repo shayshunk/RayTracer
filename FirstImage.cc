@@ -1,6 +1,3 @@
-#ifndef VEC3_H
-#define VEC3_H
-
 #include <cmath>
 #include <iostream>
 
@@ -10,22 +7,34 @@
 
 using std::cout;
 
-bool HitSphere(Point3 const& center, float radius, Ray const& r)
+float HitSphere(Point3 const& center, float radius, Ray const& r)
 {
     Vector3 oc = r.Origin() - center;
 
-    float a = Dot(r.Direction(), r.Direction());
-    float b = 2.0 * Dot(oc, r.Direction());
-    float c = Dot(oc, oc) - radius * radius;
-    float discriminant = b * b - 4 * a * c;
+    float a = r.Direction().LengthSquared();
+    float half_b = Dot(oc, r.Direction());
+    float c = oc.LengthSquared() - radius * radius;
+    float discriminant = half_b * half_b - a * c;
 
-    return (discriminant >= 0);
+    if (discriminant < 0)
+    {
+        return -1.0;
+    }
+    else
+    {
+        return (-half_b - sqrt(discriminant)) / a;
+    }
 }
 
 Color RayColor(Ray const& r)
 {
-    if (HitSphere(Point3(0, 0, -1), 0.5, r))
-        return Color(1, 0, 0);
+    float t = HitSphere(Point3(0, 0, -1), 0.5, r);
+
+    if (t > 0)
+    {
+        Vector3 N = UnitVector(r.at(t) - Vector3(0, 0, -1));
+        return 0.5 * Color(N.x() + 1, N.y() + 1, N.z() + 1);
+    }
 
     Vector3 unitDirection = UnitVector(r.Direction());
     float a = 0.5 * (unitDirection.y()) + 1.0;
@@ -85,5 +94,3 @@ int main()
 
     return 0;
 }
-
-#endif
