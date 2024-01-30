@@ -45,9 +45,9 @@ class Vector3
 
     Vector3& operator/=(double t) { return *this *= 1 / t; }
 
-    double lengthSquared() const { return e[0] * e[0] + e[1] * e[1] + e[2] * e[2]; }
+    double LengthSquared() const { return e[0] * e[0] + e[1] * e[1] + e[2] * e[2]; }
 
-    double length() const { return sqrt(lengthSquared()); }
+    double Length() const { return sqrt(LengthSquared()); }
 };
 
 // point3 is just an alias for Vector3, but useful for geometric clarity
@@ -95,19 +95,19 @@ inline Vector3 operator/(Vector3 const& v, double t)
     return (1 / t) * v;
 }
 
-inline double dot(Vector3 const& u, Vector3 const& v)
+inline double Dot(Vector3 const& u, Vector3 const& v)
 {
     return u.e[0] * v.e[0] + u.e[1] * v.e[1] + u.e[2] * v.e[2];
 }
 
-inline Vector3 cross(Vector3 const& u, Vector3 const& v)
+inline Vector3 Cross(Vector3 const& u, Vector3 const& v)
 {
     return Vector3(u.e[1] * v.e[2] - u.e[2] * v.e[1], u.e[2] * v.e[0] - u.e[0] * v.e[2], u.e[0] * v.e[1] - u.e[1] - v.e[0]);
 }
 
-inline Vector3 unitVector(Vector3 v)
+inline Vector3 UnitVector(Vector3 v)
 {
-    return v / v.length();
+    return v / v.Length();
 }
 
 #endif

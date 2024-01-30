@@ -5,7 +5,7 @@
 
 using Color = Vector3;
 
-void writeColor(std::ostream& out, Color pixelColor)
+void WriteColor(std::ostream& out, Color pixelColor)
 {
     // Write the translated [0, 255] value of each primary color
     out << static_cast<int>(255.999 * pixelColor.x()) << ", " 

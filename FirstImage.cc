@@ -10,9 +10,26 @@
 
 using std::cout;
 
-Color rayColor(Ray const& r)
+bool HitSphere(Point3 const& center, float radius, Ray const& r)
 {
-    return Color(0, 0, 0);
+    Vector3 oc = r.Origin() - center;
+
+    float a = Dot(r.Direction(), r.Direction());
+    float b = 2.0 * Dot(oc, r.Direction());
+    float c = Dot(oc, oc) - radius * radius;
+    float discriminant = b * b - 4 * a * c;
+
+    return (discriminant >= 0);
+}
+
+Color RayColor(Ray const& r)
+{
+    if (HitSphere(Point3(0, 0, -1), 0.5, r))
+        return Color(1, 0, 0);
+
+    Vector3 unitDirection = UnitVector(r.Direction());
+    float a = 0.5 * (unitDirection.y()) + 1.0;
+    return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
 }
 
 int main()
@@ -54,13 +71,13 @@ int main()
 
         for (int j = 0; j < imageWidth; j++)
         {
-            Point3 pixelCenter = pixel00Location + (i * pixelDeltaU) + (j * pixelDeltaV);
+            Point3 pixelCenter = pixel00Location + (i * pixelDeltaV) + (j * pixelDeltaU);
             Vector3 rayDirection = pixelCenter - cameraCenter;
 
             Ray r(cameraCenter, rayDirection);
 
-            Color pixelColor = rayColor(r);
-            writeColor(cout, pixelColor);
+            Color pixelColor = RayColor(r);
+            WriteColor(cout, pixelColor);
         }
     }
 

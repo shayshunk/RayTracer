@@ -10,9 +10,9 @@ class Ray
 
     Ray(Point3 const& origin, Vector3 const& direction) : orig(origin), dir(direction) {}
 
-    Point3 origin() const { return orig; }
+    Point3 Origin() const { return orig; }
 
-    Vector3 direction() const { return dir; }
+    Vector3 Direction() const { return dir; }
 
     Point3 at(double t) const
     {
