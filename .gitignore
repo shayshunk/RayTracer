@@ -4,3 +4,6 @@
 
 # Ignore executables
 Image
+
+# Ignore vscde folder
+.vscode
