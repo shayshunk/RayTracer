@@ -1,6 +1,7 @@
 # Ignore all image files
 *.ppm
 *.png
+!result.png
 
 # Ignore executables
 Image
