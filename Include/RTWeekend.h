@@ -19,7 +19,9 @@ inline double DegreesToRadians(double degrees)
     return degrees * pi / 180.0;
 }
 
-#include "ray.h"
-#include "vec3.h"
+// Common includes
+
+#include "Ray.h"
+#include "Vector3.h"
 
 #endif

@@ -3,10 +3,10 @@
 #include <cmath>
 #include <iostream>
 
-#include "color.h"
-#include "hittable.h"
-#include "hittableList.h"
-#include "sphere.h"
+#include "Color.h"
+#include "Hittable.h"
+#include "HittableList.h"
+#include "Sphere.h"
 
 using std::cout;
 
