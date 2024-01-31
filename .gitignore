@@ -4,7 +4,7 @@
 !result.png
 
 # Ignore executables
-Image
+RayTracer
 
 # Ignore vscde folder
 .vscode

@@ -1,61 +1,49 @@
+#include "RTWeekend.h"
+
 #include <cmath>
 #include <iostream>
 
 #include "color.h"
-#include "ray.h"
-#include "vec3.h"
+#include "hittable.h"
+#include "hittableList.h"
+#include "sphere.h"
 
 using std::cout;
 
-float HitSphere(Point3 const& center, float radius, Ray const& r)
+Color RayColor(Ray const& r, Hittable const& world)
 {
-    Vector3 oc = r.Origin() - center;
-
-    float a = r.Direction().LengthSquared();
-    float half_b = Dot(oc, r.Direction());
-    float c = oc.LengthSquared() - radius * radius;
-    float discriminant = half_b * half_b - a * c;
-
-    if (discriminant < 0)
+    HitRecord rec;
+    if (world.Hit(r, 0, infinity, rec))
     {
-        return -1.0;
-    }
-    else
-    {
-        return (-half_b - sqrt(discriminant)) / a;
-    }
-}
-
-Color RayColor(Ray const& r)
-{
-    float t = HitSphere(Point3(0, 0, -1), 0.5, r);
-
-    if (t > 0)
-    {
-        Vector3 N = UnitVector(r.at(t) - Vector3(0, 0, -1));
-        return 0.5 * Color(N.x() + 1, N.y() + 1, N.z() + 1);
+        return 0.5 * (rec.normal + Color(1, 1, 1));
     }
 
     Vector3 unitDirection = UnitVector(r.Direction());
-    float a = 0.5 * (unitDirection.y()) + 1.0;
+    double a = 0.5 * (unitDirection.y()) + 1.0;
     return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
 }
 
 int main()
 {
     // Image
-    float aspectRatio = 16.0 / 9.0;
+    double aspectRatio = 16.0 / 9.0;
     int imageWidth = 400;
 
     // Calculating image height and checking that it's >= 1
     int imageHeight = static_cast<int>(imageWidth / aspectRatio);
-    imageHeight = (imageHeight < 1)? 1 : imageHeight;
+    imageHeight = (imageHeight < 1) ? 1 : imageHeight;
+
+    // World
+    HittableList world;
+
+    world.Add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
+    world.Add(make_shared<Sphere>(Point3(0, -100.5, 1), 100));
 
     // Setting up Camera
-    float focalLength = 1.0;
-    float viewportHeight = 2.0;
+    double focalLength = 1.0;
+    double viewportHeight = 2.0;
 
-    float viewportWidth = viewportHeight * (static_cast<float>(imageWidth) / imageHeight);
+    double viewportWidth = viewportHeight * (static_cast<double>(imageWidth) / imageHeight);
     Point3 cameraCenter(0, 0, 0);
 
     // Calculating vectors across the horizontal and down the vertical viewport edges
@@ -67,7 +55,8 @@ int main()
     Vector3 pixelDeltaV = viewportV / imageHeight;
 
     // Calculating the location of the upper left pixel
-    Point3 viewportUpperLeft = cameraCenter - Vector3(0, 0, focalLength) - (viewportU / 2) - (viewportV / 2);
+    Point3 viewportUpperLeft = cameraCenter - Vector3(0, 0, focalLength) - (viewportU / 2)
+                               - (viewportV / 2);
     Point3 pixel00Location = viewportUpperLeft + (0.5 * (pixelDeltaU + pixelDeltaV));
 
     // Rendering
@@ -75,7 +64,7 @@ int main()
 
     for (int i = 0; i < imageHeight; i++)
     {
-        std::clog << "Scanlines remaining: " << (imageHeight - i) << '\r';
+        // std::clog << "Scanlines remaining: " << (imageHeight - i) << '\r';
         cout.flush();
 
         for (int j = 0; j < imageWidth; j++)
@@ -85,7 +74,7 @@ int main()
 
             Ray r(cameraCenter, rayDirection);
 
-            Color pixelColor = RayColor(r);
+            Color pixelColor = RayColor(r, world);
             WriteColor(cout, pixelColor);
         }
     }
