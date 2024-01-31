@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "hittable.h"
+#include "Hittable.h"
 
 using std::make_shared;
 using std::shared_ptr;
@@ -21,16 +21,16 @@ class HittableList : public Hittable
 
     void Add(shared_ptr<Hittable> object) { objects.push_back(object); }
 
-    bool Hit(Ray const& r, double rayTMin, double rayTMax, HitRecord& rec) const override
+    bool Hit(Ray const& r, Interval rayT, HitRecord& rec) const override
     {
         HitRecord tempRec;
         bool hitAnything = false;
 
-        double closestSoFar = rayTMax;
+        double closestSoFar = rayT.max;
 
         for (auto const& object : objects)
         {
-            if (object->Hit(r, rayTMin, closestSoFar, tempRec))
+            if (object->Hit(r, Interval(rayT.min, closestSoFar), tempRec))
             {
                 hitAnything = true;
                 closestSoFar = tempRec.t;

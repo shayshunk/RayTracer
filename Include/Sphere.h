@@ -1,15 +1,15 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
+#include "Hittable.h"
 #include "Vector3.h"
-#include "hittable.h"
 
 class Sphere : public Hittable
 {
   public:
     Sphere(Point3 _center, double _radius) : center(_center), radius(_radius) {}
 
-    bool Hit(Ray const& r, double rayTMin, double rayTMax, HitRecord& rec) const override
+    bool Hit(Ray const& r, Interval rayT, HitRecord& rec) const override
     {
         Vector3 oc = r.Origin() - center;
         auto a = r.Direction().LengthSquared();
@@ -23,10 +23,10 @@ class Sphere : public Hittable
 
         // Find the nearest root that lies in the acceptable range.
         auto root = (-half_b - sqrtd) / a;
-        if (root <= rayTMin || rayTMax <= root)
+        if (!rayT.Surrounds(root))
         {
             root = (-half_b + sqrtd) / a;
-            if (root <= rayTMin || rayTMax <= root)
+            if (!rayT.Surrounds(root))
                 return false;
         }
 
