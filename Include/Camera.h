@@ -13,6 +13,7 @@ class Camera
     double aspectRatio = 1;  // Ratio of image width over height
     int imageWidth = 100;  // Rendered image width in pixels
     int samplesPerPixel = 10;  // Count of random samples per pixel (AA)
+    int maxDepth = 10;  // Maximum number of ray bounces
 
     void Render(Hittable const& world)
     {
@@ -22,7 +23,7 @@ class Camera
 
         for (int i = 0; i < imageHeight; i++)
         {
-            std::clog << "Scanlines remaining: " << (imageHeight - i) << '\r';
+            std::clog << "\rScanlines remaining: " << (imageHeight - i) << "/" << imageHeight;
             cout.flush();
 
             for (int j = 0; j < imageWidth; j++)
@@ -32,14 +33,14 @@ class Camera
                 for (int sample = 0; sample < samplesPerPixel; sample++)
                 {
                     Ray r = GetRay(i, j);
-                    pixelColor += RayColor(r, world);
+                    pixelColor += RayColor(r, maxDepth, world);
                 }
 
                 WriteColor(cout, pixelColor, samplesPerPixel);
             }
         }
 
-        std::clog << "Done.\n";
+        std::clog << "\r     Done.\n";
     }
 
   private:
@@ -97,13 +98,17 @@ class Camera
         return (px * pixelDeltaU) + (py * pixelDeltaV);
     }
 
-    Color RayColor(Ray const& r, Hittable const& world) const
+    Color RayColor(Ray const& r, int depth, Hittable const& world) const
     {
+        // No more light gathering if we hit max depth
+        if (depth == 0)
+            return Color(0, 0, 0);
+
         HitRecord rec;
         if (world.Hit(r, Interval(0, infinity), rec))
         {
             Vector3 direction = RandomOnHemisphere(rec.normal);
-            return 0.5 * RayColor(Ray(rec.p, direction), world);
+            return 0.5 * RayColor(Ray(rec.p, direction), depth - 1, world);
         }
 
         Vector3 unitDirection = UnitVector(r.Direction());
