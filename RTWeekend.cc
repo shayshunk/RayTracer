@@ -27,8 +27,8 @@ int main()
 
     auto groundMaterial = make_shared<Lambertian>(Color(0.8, 0.8, 0));
     auto centerMaterial = make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
-    auto leftMaterial = make_shared<Metal>(Color(0.8, 0.8, 0.8));
-    auto rightMaterial = make_shared<Metal>(Color(0.8, 0.6, 0.2));
+    auto leftMaterial = make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.01);
+    auto rightMaterial = make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.08);
 
     world.Add(make_shared<Sphere>(Point3(0, -100.5, -1), 100, groundMaterial));
     world.Add(make_shared<Sphere>(Point3(0, 0, -1), 0.5, centerMaterial));
@@ -39,7 +39,7 @@ int main()
 
     camera.aspectRatio = 16.0 / 9.0;
     camera.imageWidth = 800;
-    camera.samplesPerPixel = 50;
+    camera.samplesPerPixel = 100;
     camera.maxDepth = 25;
 
     camera.Render(world);
