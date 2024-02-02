@@ -12,6 +12,7 @@ class Camera
   public:
     double aspectRatio = 1;  // Ratio of image width over height
     int imageWidth = 100;  // Rendered image width in pixels
+    int samplesPerPixel = 10;  // Count of random samples per pixel (AA)
 
     void Render(Hittable const& world)
     {
@@ -21,18 +22,20 @@ class Camera
 
         for (int i = 0; i < imageHeight; i++)
         {
-            // std::clog << "Scanlines remaining: " << (imageHeight - i) << '\r';
+            std::clog << "Scanlines remaining: " << (imageHeight - i) << '\r';
             cout.flush();
 
             for (int j = 0; j < imageWidth; j++)
             {
-                Point3 pixelCenter = pixel00Location + (i * pixelDeltaV) + (j * pixelDeltaU);
-                Vector3 rayDirection = pixelCenter - center;
+                Color pixelColor(0, 0, 0);
 
-                Ray r(center, rayDirection);
+                for (int sample = 0; sample < samplesPerPixel; sample++)
+                {
+                    Ray r = GetRay(i, j);
+                    pixelColor += RayColor(r, world);
+                }
 
-                Color pixelColor = RayColor(r, world);
-                WriteColor(cout, pixelColor);
+                WriteColor(cout, pixelColor, samplesPerPixel);
             }
         }
 
@@ -71,6 +74,27 @@ class Camera
         Point3 viewportUpperLeft = center - Vector3(0, 0, focalLength) - (viewportU / 2)
                                    - (viewportV / 2);
         pixel00Location = viewportUpperLeft + (0.5 * (pixelDeltaU + pixelDeltaV));
+    }
+
+    Ray GetRay(int i, int j) const
+    {
+        // Get a randomly sampled camera ray for pixel (i, j)
+        Point3 pixelCenter = pixel00Location + (i * pixelDeltaV) + (j * pixelDeltaU);
+        Point3 pixelSample = pixelCenter + PixelSampleSquare();
+
+        Point3 rayOrigin = center;
+        Vector3 rayDirection = pixelSample - rayOrigin;
+
+        return Ray(rayOrigin, rayDirection);
+    }
+
+    Vector3 PixelSampleSquare() const
+    {
+        // Return a random point in the square surround the pixel at the origin
+        double px = -0.5 + RandomDouble();
+        double py = -0.5 + RandomDouble();
+
+        return (px * pixelDeltaU) + (py * pixelDeltaV);
     }
 
     Color RayColor(Ray const& r, Hittable const& world) const

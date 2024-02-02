@@ -2,6 +2,7 @@
 #define RTWEEKEND_H
 
 #include <cmath>
+#include <cstdlib>
 #include <limits>
 #include <memory>
 
@@ -17,6 +18,18 @@ double const pi = 3.1415926535897932385;
 inline double DegreesToRadians(double degrees)
 {
     return degrees * pi / 180.0;
+}
+
+inline double RandomDouble()
+{
+    // Returns a random real number in [0, 1)
+    return rand() / (RAND_MAX + 1.0);
+}
+
+inline double RandomDouble(double min, double max)
+{
+    // Returns a random real number in [min, max)
+    return min + (max - min) * RandomDouble();
 }
 
 // Common includes
