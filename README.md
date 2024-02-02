@@ -23,7 +23,7 @@ This is a learning exercise and barebones approach to software raytracing that's
 This will be updated as it progresses. Current shading is through surface normals, calculated through where the ray casts interact with the sphere.
 
 <p align="center">
-    <img src="result.png" width="400">
+    <img src="result.png">
 </p>
 
 ##
