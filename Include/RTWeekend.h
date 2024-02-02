@@ -11,7 +11,7 @@ using std::shared_ptr;
 using std::sqrt;
 
 // Constants
-// double const infinity = std::numeric_limits<double>::infinity();
+double const infinity = std::numeric_limits<double>::infinity();
 double const pi = 3.1415926535897932385;
 
 // Utilities

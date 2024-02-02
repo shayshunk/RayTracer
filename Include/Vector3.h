@@ -48,6 +48,13 @@ class Vector3
     double LengthSquared() const { return e[0] * e[0] + e[1] * e[1] + e[2] * e[2]; }
 
     double Length() const { return sqrt(LengthSquared()); }
+
+    static Vector3 Random() { return Vector3(RandomDouble(), RandomDouble(), RandomDouble()); }
+
+    static Vector3 Random(double min, double max)
+    {
+        return Vector3(RandomDouble(min, max), RandomDouble(min, max), RandomDouble(min, max));
+    }
 };
 
 // point3 is just an alias for Vector3, but useful for geometric clarity
@@ -110,6 +117,32 @@ inline Vector3 Cross(Vector3 const& u, Vector3 const& v)
 inline Vector3 UnitVector(Vector3 v)
 {
     return v / v.Length();
+}
+
+inline Vector3 RandomInUnitSphere()
+{
+    while (true)
+    {
+        Vector3 p = Vector3::Random(-1, 1);
+
+        if (p.LengthSquared() < 1)
+            return p;
+    }
+}
+
+inline Vector3 RandomUnitVector()
+{
+    return UnitVector(RandomInUnitSphere());
+}
+
+inline Vector3 RandomOnHemisphere(Vector3 const& normal)
+{
+    Vector3 onUnitSphere = RandomUnitVector();
+
+    if (Dot(onUnitSphere, normal) > 0.0)
+        return onUnitSphere;
+    else
+        return -onUnitSphere;
 }
 
 #endif

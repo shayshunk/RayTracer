@@ -1,10 +1,6 @@
 #ifndef INTERVAL_H
 #define INTERVAL_H
 
-#include <limits>
-
-double const infinity = std::numeric_limits<double>::infinity();
-
 class Interval
 {
   public:
