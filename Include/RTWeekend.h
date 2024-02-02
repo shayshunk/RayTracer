@@ -34,8 +34,13 @@ inline double RandomDouble(double min, double max)
 
 // Common includes
 
+#include "Color.h"
+#include "Hittable.h"
+#include "HittableList.h"
 #include "Interval.h"
+#include "Material.h"
 #include "Ray.h"
+#include "Sphere.h"
 #include "Vector3.h"
 
 #endif

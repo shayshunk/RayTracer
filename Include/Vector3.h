@@ -49,6 +49,13 @@ class Vector3
 
     double Length() const { return sqrt(LengthSquared()); }
 
+    bool NearZero() const
+    {
+        // Return true if the vector is close to zero in all dimension
+        double s = 1e-8;
+        return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
+    }
+
     static Vector3 Random() { return Vector3(RandomDouble(), RandomDouble(), RandomDouble()); }
 
     static Vector3 Random(double min, double max)
@@ -143,6 +150,11 @@ inline Vector3 RandomOnHemisphere(Vector3 const& normal)
         return onUnitSphere;
     else
         return -onUnitSphere;
+}
+
+Vector3 Reflect(Vector3 const& v, Vector3 const& n)
+{
+    return v - 2 * Dot(v, n) * n;
 }
 
 #endif

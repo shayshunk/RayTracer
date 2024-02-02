@@ -1,6 +1,7 @@
 #ifndef COLOR_H
 #define COLOR_H
 
+#include "Interval.h"
 #include "Vector3.h"
 
 using Color = Vector3;

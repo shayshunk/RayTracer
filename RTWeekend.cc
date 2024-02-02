@@ -4,10 +4,6 @@
 #include <iostream>
 
 #include "Camera.h"
-#include "Color.h"
-#include "Hittable.h"
-#include "HittableList.h"
-#include "Sphere.h"
 
 using std::cout;
 
@@ -29,15 +25,22 @@ int main()
     // World
     HittableList world;
 
-    world.Add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
-    world.Add(make_shared<Sphere>(Point3(0, -100.5, 1), 100));
+    auto groundMaterial = make_shared<Lambertian>(Color(0.8, 0.8, 0));
+    auto centerMaterial = make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
+    auto leftMaterial = make_shared<Metal>(Color(0.8, 0.8, 0.8));
+    auto rightMaterial = make_shared<Metal>(Color(0.8, 0.6, 0.2));
+
+    world.Add(make_shared<Sphere>(Point3(0, -100.5, -1), 100, groundMaterial));
+    world.Add(make_shared<Sphere>(Point3(0, 0, -1), 0.5, centerMaterial));
+    world.Add(make_shared<Sphere>(Point3(-1.0, 0, -1), 0.5, leftMaterial));
+    world.Add(make_shared<Sphere>(Point3(1.0, 0, -1), 0.5, rightMaterial));
 
     Camera camera;
 
     camera.aspectRatio = 16.0 / 9.0;
     camera.imageWidth = 800;
     camera.samplesPerPixel = 100;
-    camera.maxDepth = 10;
+    camera.maxDepth = 50;
 
     camera.Render(world);
 

@@ -1,13 +1,15 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "Hittable.h"
-#include "Vector3.h"
+#include "RTWeekend.h"
 
 class Sphere : public Hittable
 {
   public:
-    Sphere(Point3 _center, double _radius) : center(_center), radius(_radius) {}
+    Sphere(Point3 _center, double _radius, shared_ptr<Material> _material)
+        : center(_center), radius(_radius), mat(_material)
+    {
+    }
 
     bool Hit(Ray const& r, Interval rayT, HitRecord& rec) const override
     {
@@ -35,6 +37,7 @@ class Sphere : public Hittable
 
         Vector3 outwardNormal = (rec.p - center) / radius;
         rec.SetFaceNormal(r, outwardNormal);
+        rec.material = mat;
 
         return true;
     }
@@ -42,6 +45,7 @@ class Sphere : public Hittable
   private:
     Point3 center;
     double radius;
+    shared_ptr<Material> mat;
 };
 
 #endif

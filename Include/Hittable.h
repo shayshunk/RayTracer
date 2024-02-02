@@ -3,11 +3,14 @@
 
 #include "Ray.h"
 
+class Material;
+
 class HitRecord
 {
   public:
     Point3 p;
     Vector3 normal;
+    shared_ptr<Material> material;
     double t;
     bool frontFace;
 
