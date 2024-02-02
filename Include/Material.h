@@ -50,7 +50,7 @@ class Metal : public Material
     Scatter(Ray const& rIn, HitRecord const& rec, Color& attenuation, Ray& scattered) const override
     {
         Vector3 reflected = Reflect(UnitVector(rIn.Direction()), rec.normal);
-        scattered = Ray(rec.p, albedo);
+        scattered = Ray(rec.p, reflected);
         attenuation = albedo;
 
         return true;
