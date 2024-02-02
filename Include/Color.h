@@ -5,6 +5,11 @@
 
 using Color = Vector3;
 
+inline double LinearToGamma(double linearComponent)
+{
+    return sqrt(linearComponent);
+}
+
 void WriteColor(std::ostream& out, Color pixelColor, int samplesPerPixel)
 {
     double r = pixelColor.x();
@@ -17,6 +22,11 @@ void WriteColor(std::ostream& out, Color pixelColor, int samplesPerPixel)
     r *= scale;
     g *= scale;
     b *= scale;
+
+    // Apply gamma transform
+    r = LinearToGamma(r);
+    g = LinearToGamma(g);
+    b = LinearToGamma(b);
 
     // Write the translated [0, 255] value of each primary color
     static Interval const intensity(0, 0.999);
