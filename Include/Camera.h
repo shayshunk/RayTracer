@@ -105,7 +105,8 @@ class Camera
             return Color(0, 0, 0);
 
         HitRecord rec;
-        if (world.Hit(r, Interval(0, infinity), rec))
+
+        if (world.Hit(r, Interval(0.001, infinity), rec))
         {
             Vector3 direction = RandomOnHemisphere(rec.normal);
             return 0.5 * RayColor(Ray(rec.p, direction), depth - 1, world);

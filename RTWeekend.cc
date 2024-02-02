@@ -37,7 +37,7 @@ int main()
     camera.aspectRatio = 16.0 / 9.0;
     camera.imageWidth = 800;
     camera.samplesPerPixel = 100;
-    camera.maxDepth = 50;
+    camera.maxDepth = 10;
 
     camera.Render(world);
 
