@@ -66,7 +66,6 @@ class Camera
 
         double theta = DegreesToRadians(verticalFOV);
         double height = tan(theta / 2);
-        std::clog << height << '\n';
 
         double viewportHeight = 2.0 * height * focalLength;
         double viewportWidth = viewportHeight * (static_cast<double>(imageWidth) / imageHeight);
