@@ -14,6 +14,9 @@ class Camera
     int maxDepth = 10;  // Maximum number of ray bounces
 
     double verticalFOV = 90;  // Vertical field of view
+    Point3 lookFrom = Point3(0, 0, -1);  // Point camera is looking from
+    Point3 lookAt = Point3(0, 0, 0);  // Point camera is looking at
+    Vector3 vUp = Vector3(0, 1, 0);  // Relative camera "up" direction
 
     void Render(Hittable const& world)
     {
@@ -49,6 +52,7 @@ class Camera
     Point3 pixel00Location;  // Location of pixel 0, 0 (top left)
     Vector3 pixelDeltaU;  // Offset to pixel to get to the next one on right
     Vector3 pixelDeltaV;  // Offset to pixel to get to the next one below
+    Vector3 u, v, w;  // Camera frame's basis vectors
 
     void Initialize()
     {
@@ -57,27 +61,31 @@ class Camera
         imageHeight = (imageHeight < 1) ? 1 : imageHeight;
 
         // Setting up Camera and Viewport
-        double focalLength = 1.0;
+        center = lookFrom;
+        double focalLength = (lookFrom - lookAt).Length();
 
         double theta = DegreesToRadians(verticalFOV);
         double height = tan(theta / 2);
+        std::clog << height << '\n';
 
         double viewportHeight = 2.0 * height * focalLength;
         double viewportWidth = viewportHeight * (static_cast<double>(imageWidth) / imageHeight);
 
-        center = Point3(0, 0, 0);
+        // Calculating basis vectors for the camera frame
+        w = UnitVector(lookFrom - lookAt);
+        u = UnitVector(Cross(vUp, w));
+        v = Cross(w, u);
 
         // Calculating vectors across the horizontal and down the vertical viewport edges Vector3
-        Vector3 viewportU(viewportWidth, 0, 0);
-        Vector3 viewportV(0, -viewportHeight, 0);
+        Vector3 viewportU(viewportWidth * u);  // Horizontal viewport vector
+        Vector3 viewportV(viewportHeight * -v);  // Vertical viewport vector
 
         // Calculating horizontal and vertical delta vectors from pixel to pixel
         pixelDeltaU = viewportU / imageWidth;
         pixelDeltaV = viewportV / imageHeight;
 
         // Calculating the location of the upper left pixel
-        Point3 viewportUpperLeft = center - Vector3(0, 0, focalLength) - (viewportU / 2)
-                                   - (viewportV / 2);
+        Point3 viewportUpperLeft = center - (focalLength * w) - (viewportU / 2) - (viewportV / 2);
         pixel00Location = viewportUpperLeft + (0.5 * (pixelDeltaU + pixelDeltaV));
     }
 

@@ -42,13 +42,16 @@ int main(int argc, char* argv[])
     // World
     HittableList world;
 
-    double R = cos(pi / 4);
+    auto groundMaterial = make_shared<Lambertian>(Color(0.1, 0.1, 0.8));
+    auto centerMaterial = make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
+    auto leftMaterial = make_shared<Dielectric>(1.5, Color(0.95, 0.95, 0.95));
+    auto rightMaterial = make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.01);
 
-    auto leftMaterial = make_shared<Lambertian>(Color(0, 0, 1));
-    auto rightMaterial = make_shared<Lambertian>(Color(1, 0, 0));
-
-    world.Add(make_shared<Sphere>(Point3(-R, 0, -1), R, leftMaterial));
-    world.Add(make_shared<Sphere>(Point3(R, 0, -1), R, rightMaterial));
+    world.Add(make_shared<Sphere>(Point3(0, -100.5, -1), 100, groundMaterial));
+    world.Add(make_shared<Sphere>(Point3(0, 0, -1), 0.5, centerMaterial));
+    world.Add(make_shared<Sphere>(Point3(-1, 0, -1), 0.5, leftMaterial));
+    world.Add(make_shared<Sphere>(Point3(-1, 0, -1), -0.4, leftMaterial));
+    world.Add(make_shared<Sphere>(Point3(1, 0, -1), 0.5, rightMaterial));
 
     Camera camera;
 
@@ -58,6 +61,9 @@ int main(int argc, char* argv[])
     camera.maxDepth = depth;
 
     camera.verticalFOV = 90;
+    camera.lookFrom = Point3(-2, 2, 1);
+    camera.lookAt = Point3(0, 0, -1);
+    camera.vUp = Vector3(0, 1, 0);
 
     camera.Render(world);
 
