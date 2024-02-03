@@ -2,10 +2,11 @@
 
 #include <cmath>
 #include <iostream>
+#include <string>
 
 #include "Camera.h"
 
-using std::cout;
+using std::cout, std::string;
 
 Color RayColor(Ray const& r, Hittable const& world)
 {
@@ -20,8 +21,24 @@ Color RayColor(Ray const& r, Hittable const& world)
     return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    // Defaults
+    int imageWidth = 800;
+    int samples = 25;
+    int depth = 10;
+
+    // Using command line arguments for setting render quality
+    for (int i = 0; i < argc; i++)
+    {
+        if (string(argv[i]) == "-Size" && i + 1 < argc)
+            imageWidth = std::stoi(argv[i + 1]);
+        else if (string(argv[i]) == "-Depth" && i + 1 < argc)
+            depth = std::stoi(argv[i + 1]);
+        else if (string(argv[i]) == "-Samples" && i + 1 < argc)
+            samples = std::stoi(argv[i + 1]);
+    }
+
     // World
     HittableList world;
 
@@ -36,9 +53,9 @@ int main()
     Camera camera;
 
     camera.aspectRatio = 16.0 / 9.0;
-    camera.imageWidth = 800;
-    camera.samplesPerPixel = 50;
-    camera.maxDepth = 25;
+    camera.imageWidth = imageWidth;
+    camera.samplesPerPixel = samples;
+    camera.maxDepth = depth;
 
     camera.verticalFOV = 90;
 
