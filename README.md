@@ -20,7 +20,9 @@ This is a learning exercise and barebones approach to software raytracing that's
     Current Render Status
 </h3>
 
-This will be updated as it progresses. Current shading is through surface normals, calculated through where the ray casts interact with the sphere.
+This will be updated as it progresses. Three materials currently exist: Lamberian diffuse, Dielectric, and Metal. These materials interact with the rays in different ways, allowing the raycasting to bounce around the scene and attenuate and scatter according to the material's properties. If the rays don't hit a material, they end up at the skybox and carry the color back to the camera.
+
+##
 
 <p align="center">
     <img src="result.png">
