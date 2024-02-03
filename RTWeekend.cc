@@ -27,6 +27,8 @@ int main(int argc, char* argv[])
     int imageWidth = 800;
     int samples = 25;
     int depth = 10;
+    int fieldOfView = 90;
+    Vector3 lookFrom(-2, 2, 1);
 
     // Using command line arguments for setting render quality
     for (int i = 0; i < argc; i++)
@@ -37,12 +39,17 @@ int main(int argc, char* argv[])
             depth = std::stoi(argv[i + 1]);
         else if (string(argv[i]) == "-Samples" && i + 1 < argc)
             samples = std::stoi(argv[i + 1]);
+        else if (string(argv[i]) == "-FOV" && i + 1 < argc)
+            fieldOfView = std::stoi(argv[i + 1]);
+        else if (string(argv[i]) == "-CameraPos" && i + 3 < argc)
+            lookFrom
+                = Vector3(std::stoi(argv[i + 1]), std::stoi(argv[i + 2]), std::stoi(argv[i + 3]));
     }
 
     // World
     HittableList world;
 
-    auto groundMaterial = make_shared<Lambertian>(Color(0.1, 0.1, 0.8));
+    auto groundMaterial = make_shared<Lambertian>(Color(0.01, 0.01, 0.25));
     auto centerMaterial = make_shared<Lambertian>(Color(0.7, 0.2, 0));
     auto leftMaterial = make_shared<Dielectric>(1.5, Color(0.95, 0.95, 0.95));
     auto rightMaterial = make_shared<Metal>(Color(0.2, 0.6, 0.2), 0.01);
@@ -60,8 +67,8 @@ int main(int argc, char* argv[])
     camera.samplesPerPixel = samples;
     camera.maxDepth = depth;
 
-    camera.verticalFOV = 90;
-    camera.lookFrom = Point3(-2, 2, 1);
+    camera.verticalFOV = fieldOfView;
+    camera.lookFrom = lookFrom;
     camera.lookAt = Point3(0, 0, -1);
     camera.vUp = Vector3(0, 1, 0);
 
