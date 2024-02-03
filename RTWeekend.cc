@@ -27,7 +27,7 @@ int main()
 
     auto groundMaterial = make_shared<Lambertian>(Color(0.1, 0.1, 0.5));
     auto centerMaterial = make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
-    auto leftMaterial = make_shared<Metal>(Color(0.8, 0.8, 0.8), 0.01);
+    auto leftMaterial = make_shared<Dielectric>(1.33);
     auto rightMaterial = make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.08);
 
     world.Add(make_shared<Sphere>(Point3(0, -100.5, -1), 100, groundMaterial));

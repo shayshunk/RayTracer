@@ -152,9 +152,19 @@ inline Vector3 RandomOnHemisphere(Vector3 const& normal)
         return -onUnitSphere;
 }
 
-Vector3 Reflect(Vector3 const& v, Vector3 const& n)
+inline Vector3 Reflect(Vector3 const& v, Vector3 const& n)
 {
     return v - 2 * Dot(v, n) * n;
+}
+
+inline Vector3 Refract(Vector3 const& uv, Vector3 const& n, double eta_iOverEta_t)
+{
+    double cosTheta = fmin(Dot(-uv, n), 1.0);
+
+    Vector3 rOutPerpendicular = eta_iOverEta_t * (uv + cosTheta * n);
+    Vector3 rOutParralel = -sqrt(fabs(1.0 - rOutPerpendicular.LengthSquared())) * n;
+
+    return rOutParralel + rOutPerpendicular;
 }
 
 #endif

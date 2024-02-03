@@ -61,4 +61,28 @@ class Metal : public Material
     double fuzz;
 };
 
+class Dielectric : public Material
+{
+  public:
+    Dielectric(double indexOfRefraction) : ir(indexOfRefraction) {}
+
+    bool
+    Scatter(Ray const& rIn, HitRecord const& rec, Color& attenuation, Ray& scattered) const override
+    {
+        attenuation = Color(1, 1, 1);
+
+        double refractionRatio = rec.frontFace ? (1.0, ir) : ir;
+
+        Vector3 unitDirection = UnitVector(rIn.Direction());
+        Vector3 refracted = Refract(unitDirection, rec.normal, refractionRatio);
+
+        scattered = Ray(rec.p, refracted);
+
+        return true;
+    }
+
+  private:
+    double ir;  // Index of refraction
+};
+
 #endif
