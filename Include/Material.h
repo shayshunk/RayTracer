@@ -71,18 +71,38 @@ class Dielectric : public Material
     {
         attenuation = Color(1, 1, 1);
 
-        double refractionRatio = rec.frontFace ? (1.0, ir) : ir;
+        double refractionRatio = rec.frontFace ? (1.0 / ir) : ir;
 
         Vector3 unitDirection = UnitVector(rIn.Direction());
-        Vector3 refracted = Refract(unitDirection, rec.normal, refractionRatio);
 
-        scattered = Ray(rec.p, refracted);
+        double cosTheta = fmin(Dot(-unitDirection, rec.normal), 1.0);
+        double sinTheta = sqrt(1.0 - cosTheta * cosTheta);
+
+        bool cannotRefract = (refractionRatio * sinTheta) > 1.0;
+
+        Vector3 direction;
+
+        if (cannotRefract || (Reflectance(cosTheta, refractionRatio) > RandomDouble()))
+            direction = Reflect(unitDirection, rec.normal);
+        else
+            direction = Refract(unitDirection, rec.normal, refractionRatio);
+
+        scattered = Ray(rec.p, direction);
 
         return true;
     }
 
   private:
     double ir;  // Index of refraction
+
+    static double Reflectance(double cos, double refRatio)
+    {
+        // Using Schlick's approximation for reflectance
+        double r0 = (1 - refRatio) / (1 + refRatio);
+        r0 *= r0;
+
+        return r0 + (1 - r0) * pow((1 - cos), 5);
+    }
 };
 
 #endif
