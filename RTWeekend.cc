@@ -25,22 +25,22 @@ int main()
     // World
     HittableList world;
 
-    auto groundMaterial = make_shared<Lambertian>(Color(0.1, 0.1, 0.5));
-    auto centerMaterial = make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
-    auto leftMaterial = make_shared<Dielectric>(1.33);
-    auto rightMaterial = make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.08);
+    double R = cos(pi / 4);
 
-    world.Add(make_shared<Sphere>(Point3(0, -100.5, -1), 100, groundMaterial));
-    world.Add(make_shared<Sphere>(Point3(0, 0, -1), 0.5, centerMaterial));
-    world.Add(make_shared<Sphere>(Point3(-1.0, 0, -1), 0.5, leftMaterial));
-    world.Add(make_shared<Sphere>(Point3(1.0, 0, -1), 0.5, rightMaterial));
+    auto leftMaterial = make_shared<Lambertian>(Color(0, 0, 1));
+    auto rightMaterial = make_shared<Lambertian>(Color(1, 0, 0));
+
+    world.Add(make_shared<Sphere>(Point3(-R, 0, -1), R, leftMaterial));
+    world.Add(make_shared<Sphere>(Point3(R, 0, -1), R, rightMaterial));
 
     Camera camera;
 
     camera.aspectRatio = 16.0 / 9.0;
     camera.imageWidth = 800;
-    camera.samplesPerPixel = 100;
+    camera.samplesPerPixel = 50;
     camera.maxDepth = 25;
+
+    camera.verticalFOV = 90;
 
     camera.Render(world);
 

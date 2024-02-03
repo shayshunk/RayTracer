@@ -64,12 +64,12 @@ class Metal : public Material
 class Dielectric : public Material
 {
   public:
-    Dielectric(double indexOfRefraction) : ir(indexOfRefraction) {}
+    Dielectric(double indexOfRefraction, Color const& a) : ir(indexOfRefraction), albedo(a) {}
 
     bool
     Scatter(Ray const& rIn, HitRecord const& rec, Color& attenuation, Ray& scattered) const override
     {
-        attenuation = Color(1, 1, 1);
+        attenuation = albedo;
 
         double refractionRatio = rec.frontFace ? (1.0 / ir) : ir;
 
@@ -94,6 +94,7 @@ class Dielectric : public Material
 
   private:
     double ir;  // Index of refraction
+    Color albedo;
 
     static double Reflectance(double cos, double refRatio)
     {

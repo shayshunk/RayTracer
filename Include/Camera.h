@@ -13,6 +13,8 @@ class Camera
     int samplesPerPixel = 10;  // Count of random samples per pixel (AA)
     int maxDepth = 10;  // Maximum number of ray bounces
 
+    double verticalFOV = 90;  // Vertical field of view
+
     void Render(Hittable const& world)
     {
         Initialize();
@@ -56,7 +58,11 @@ class Camera
 
         // Setting up Camera and Viewport
         double focalLength = 1.0;
-        double viewportHeight = 2.0;
+
+        double theta = DegreesToRadians(verticalFOV);
+        double height = tan(theta / 2);
+
+        double viewportHeight = 2.0 * height * focalLength;
         double viewportWidth = viewportHeight * (static_cast<double>(imageWidth) / imageHeight);
 
         center = Point3(0, 0, 0);
