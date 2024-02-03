@@ -1,10 +1,9 @@
-#include "RTWeekend.h"
-
 #include <cmath>
 #include <iostream>
 #include <string>
 
 #include "Camera.h"
+#include "RTWeekend.h"
 
 using std::cout, std::string;
 
@@ -71,6 +70,9 @@ int main(int argc, char* argv[])
     camera.lookFrom = lookFrom;
     camera.lookAt = Point3(0, 0, -1);
     camera.vUp = Vector3(0, 1, 0);
+
+    camera.defocusAngle = 10.0;
+    camera.focusDistance = 3.4;
 
     camera.Render(world);
 

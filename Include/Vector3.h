@@ -137,6 +137,17 @@ inline Vector3 RandomInUnitSphere()
     }
 }
 
+inline Vector3 RandomInUnitDisk()
+{
+    while (true)
+    {
+        Vector3 p(RandomDouble(-1, 1), RandomDouble(-1, 1), 0);
+
+        if (p.LengthSquared() < 1)
+            return p;
+    }
+}
+
 inline Vector3 RandomUnitVector()
 {
     return UnitVector(RandomInUnitSphere());

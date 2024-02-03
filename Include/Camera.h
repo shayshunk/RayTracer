@@ -18,6 +18,9 @@ class Camera
     Point3 lookAt = Point3(0, 0, 0);  // Point camera is looking at
     Vector3 vUp = Vector3(0, 1, 0);  // Relative camera "up" direction
 
+    double defocusAngle = 0;  // Variation angle of rays through each pixel
+    double focusDistance = 10;  // Distance from camera center to plane of perfect focus
+
     void Render(Hittable const& world)
     {
         Initialize();
@@ -53,6 +56,8 @@ class Camera
     Vector3 pixelDeltaU;  // Offset to pixel to get to the next one on right
     Vector3 pixelDeltaV;  // Offset to pixel to get to the next one below
     Vector3 u, v, w;  // Camera frame's basis vectors
+    Vector3 defocusDiskU;  // Defocus disk horizontal radius
+    Vector3 defocusDiskV;  // Defocus disk vertical radius
 
     void Initialize()
     {
@@ -62,12 +67,11 @@ class Camera
 
         // Setting up Camera and Viewport
         center = lookFrom;
-        double focalLength = (lookFrom - lookAt).Length();
 
         double theta = DegreesToRadians(verticalFOV);
         double height = tan(theta / 2);
 
-        double viewportHeight = 2.0 * height * focalLength;
+        double viewportHeight = 2.0 * height * focusDistance;
         double viewportWidth = viewportHeight * (static_cast<double>(imageWidth) / imageHeight);
 
         // Calculating basis vectors for the camera frame
@@ -84,17 +88,22 @@ class Camera
         pixelDeltaV = viewportV / imageHeight;
 
         // Calculating the location of the upper left pixel
-        Point3 viewportUpperLeft = center - (focalLength * w) - (viewportU / 2) - (viewportV / 2);
+        Point3 viewportUpperLeft = center - (focusDistance * w) - (viewportU / 2) - (viewportV / 2);
         pixel00Location = viewportUpperLeft + (0.5 * (pixelDeltaU + pixelDeltaV));
+
+        // Calculating camera defocus disk basis vectors
+        double defocusRadius = focusDistance * tan(DegreesToRadians(defocusAngle / 2));
+        defocusDiskU = u * defocusRadius;
+        defocusDiskV = v * defocusRadius;
     }
 
     Ray GetRay(int i, int j) const
     {
-        // Get a randomly sampled camera ray for pixel (i, j)
+        // Get a randomly sampled camera ray for pixel (i, j) from camera defocus disk
         Point3 pixelCenter = pixel00Location + (i * pixelDeltaV) + (j * pixelDeltaU);
         Point3 pixelSample = pixelCenter + PixelSampleSquare();
 
-        Point3 rayOrigin = center;
+        Point3 rayOrigin = (defocusAngle <= 0) ? center : DefocusDiskSample();
         Vector3 rayDirection = pixelSample - rayOrigin;
 
         return Ray(rayOrigin, rayDirection);
@@ -107,6 +116,14 @@ class Camera
         double py = -0.5 + RandomDouble();
 
         return (px * pixelDeltaU) + (py * pixelDeltaV);
+    }
+
+    Point3 DefocusDiskSample() const
+    {
+        // Returns a random point in the camera defocus disk
+        Vector3 p = RandomInUnitDisk();
+
+        return center + (p[0] * defocusDiskU) + (p[1] * defocusDiskV);
     }
 
     Color RayColor(Ray const& r, int depth, Hittable const& world) const
