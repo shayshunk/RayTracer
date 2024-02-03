@@ -25,9 +25,9 @@ int main(int argc, char* argv[])
     // Defaults
     int imageWidth = 800;
     int samples = 25;
-    int depth = 10;
-    int fieldOfView = 90;
-    Vector3 lookFrom(-2, 2, 1);
+    int depth = 50;
+    int fieldOfView = 20;
+    Vector3 lookFrom(13, 2, 3);
 
     // Using command line arguments for setting render quality
     for (int i = 0; i < argc; i++)
@@ -48,16 +48,52 @@ int main(int argc, char* argv[])
     // World
     HittableList world;
 
-    auto groundMaterial = make_shared<Lambertian>(Color(0.01, 0.01, 0.25));
-    auto centerMaterial = make_shared<Lambertian>(Color(0.7, 0.2, 0));
-    auto leftMaterial = make_shared<Dielectric>(1.5, Color(0.95, 0.95, 0.95));
-    auto rightMaterial = make_shared<Metal>(Color(0.2, 0.6, 0.2), 0.01);
+    auto groundMaterial = make_shared<Lambertian>(Color(0.1, 0.1, 0));
+    world.Add(make_shared<Sphere>(Point3(0, -1000, -1), 1000, groundMaterial));
 
-    world.Add(make_shared<Sphere>(Point3(0, -100.5, -1), 100, groundMaterial));
-    world.Add(make_shared<Sphere>(Point3(0, 0, -1), 0.5, centerMaterial));
-    world.Add(make_shared<Sphere>(Point3(-1, 0, -1), 0.5, leftMaterial));
-    world.Add(make_shared<Sphere>(Point3(-1, 0, -1), -0.4, leftMaterial));
-    world.Add(make_shared<Sphere>(Point3(1, 0, -1), 0.5, rightMaterial));
+    for (int a = -11; a < 11; a++)
+    {
+        for (int b = -11; b < 11; b++)
+        {
+            double chooseMaterial = RandomDouble();
+
+            Point3 center(a + 0.9 * RandomDouble(), 0.2, b + 0.9 * RandomDouble());
+
+            if ((center - Point3(4, 0.2, 0)).Length() > 0.9)
+            {
+                shared_ptr<Material> sphereMaterial;
+
+                if (chooseMaterial < 0.5)  // Diffuse
+                {
+                    Color albedo = Color::Random() * Color::Random();
+
+                    sphereMaterial = make_shared<Lambertian>(albedo);
+                }
+                else if (chooseMaterial < 0.75)
+                {
+                    Color albedo = Color::Random(0.5, 1);
+                    double fuzz = RandomDouble(0, 0.4);
+
+                    sphereMaterial = make_shared<Metal>(albedo, fuzz);
+                }
+                else  // Glass
+                {
+                    Color albedo = Color::Random(0.8, 1);
+                    sphereMaterial = make_shared<Dielectric>(1.5, albedo);
+                }
+
+                world.Add(make_shared<Sphere>(center, 0.2, sphereMaterial));
+            }
+        }
+    }
+
+    auto backMaterial = make_shared<Lambertian>(Color(0.8, 0.1, 0.1));
+    auto middleMaterial = make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.03);
+    auto frontMaterial = make_shared<Dielectric>(1.33, Color(0.95, 0.95, 0.8));
+
+    world.Add(make_shared<Sphere>(Point3(-4, 1, 0), 1.0, backMaterial));
+    world.Add(make_shared<Sphere>(Point3(0, 1, 0), 1.0, middleMaterial));
+    world.Add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, frontMaterial));
 
     Camera camera;
 
@@ -68,11 +104,11 @@ int main(int argc, char* argv[])
 
     camera.verticalFOV = fieldOfView;
     camera.lookFrom = lookFrom;
-    camera.lookAt = Point3(0, 0, -1);
+    camera.lookAt = Point3(0, 0, 0);
     camera.vUp = Vector3(0, 1, 0);
 
-    camera.defocusAngle = 10.0;
-    camera.focusDistance = 3.4;
+    camera.defocusAngle = 0.6;
+    camera.focusDistance = 10;
 
     camera.Render(world);
 
