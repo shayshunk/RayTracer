@@ -28,6 +28,12 @@ This is a learning exercise and barebones approach to software raytracing that's
  - Anti-aliasing (samples each pixel multiple times)
  - Camera position movement
  - Ray bouncing
+ - Command line arguments:
+    - `-Size 1200` gives an image that is 1200 pixels wide, like the image below
+    - `-FOV 90` gives a 90 degree vertical field of view. The image below has an FOV of 20 degrees
+    - `-Samples 50` samples each pixel with 50 rays. The image below is with 250 rays per pixel
+    - `-Depth 50` allows each ray to bounce up to 50 times like the image below
+    - `-CameraPos 1 1 1` places the camera at (1, 1, 1), with the default looking at (0, 0, 0)
 
 ##
 
