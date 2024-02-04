@@ -7,19 +7,6 @@
 
 using std::cout, std::string;
 
-Color RayColor(Ray const& r, Hittable const& world)
-{
-    HitRecord rec;
-    if (world.Hit(r, Interval(0, infinity), rec))
-    {
-        return 0.5 * (rec.normal + Color(1, 1, 1));
-    }
-
-    Vector3 unitDirection = UnitVector(r.Direction());
-    double a = 0.5 * (unitDirection.y()) + 1.0;
-    return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
-}
-
 int main(int argc, char* argv[])
 {
     // Defaults
@@ -51,9 +38,9 @@ int main(int argc, char* argv[])
     auto groundMaterial = make_shared<Lambertian>(Color(0.1, 0.1, 0));
     world.Add(make_shared<Sphere>(Point3(0, -1000, -1), 1000, groundMaterial));
 
-    for (int a = -11; a < 11; a++)
+    /* for (int a = 0; a < 11; a++)
     {
-        for (int b = -11; b < 11; b++)
+        for (int b = 0; b < 11; b++)
         {
             double chooseMaterial = RandomDouble();
 
@@ -85,7 +72,7 @@ int main(int argc, char* argv[])
                 world.Add(make_shared<Sphere>(center, 0.2, sphereMaterial));
             }
         }
-    }
+    } */
 
     auto backMaterial = make_shared<Lambertian>(Color(0.8, 0.1, 0.1));
     auto middleMaterial = make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.03);

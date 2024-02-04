@@ -4,6 +4,8 @@
 #include <array>
 #include <cmath>
 #include <iostream>
+
+#include "Timer.h"
 using std::sqrt, std::array;
 
 class Vector3
@@ -61,6 +63,11 @@ class Vector3
     static Vector3 Random(double min, double max)
     {
         return Vector3(RandomDouble(min, max), RandomDouble(min, max), RandomDouble(min, max));
+    }
+
+    static Vector3 Random(double minTheta, double maxTheta, double minPhi, double maxPhi)
+    {
+        return Vector3(1, RandomDouble(minTheta, maxTheta), RandomDouble(minPhi, maxPhi));
     }
 };
 
@@ -126,7 +133,7 @@ inline Vector3 UnitVector(Vector3 v)
     return v / v.Length();
 }
 
-inline Vector3 RandomInUnitSphere()
+/* inline Vector3 RandomInUnitSphere()
 {
     while (true)
     {
@@ -135,7 +142,7 @@ inline Vector3 RandomInUnitSphere()
         if (p.LengthSquared() < 1)
             return p;
     }
-}
+} */
 
 inline Vector3 RandomInUnitDisk()
 {
@@ -148,9 +155,20 @@ inline Vector3 RandomInUnitDisk()
     }
 }
 
-inline Vector3 RandomUnitVector()
+/* inline Vector3 RandomUnitVector()
 {
     return UnitVector(RandomInUnitSphere());
+} */
+// Rejection method
+
+inline Vector3 RandomUnitVector()
+{
+    Vector3 p = Vector3::Random(0, 1, 0, 2);
+    p.e[0] = sin(p.e[1] * pi) * cos(p.e[2] * pi);
+    p.e[1] = sin(p.e[1] * pi) * sin(p.e[2] * pi);
+    p.e[2] = cos(p.e[1] * pi);
+
+    return p;
 }
 
 inline Vector3 RandomOnHemisphere(Vector3 const& normal)

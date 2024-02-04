@@ -46,7 +46,7 @@ class Camera
             }
         }
 
-        std::clog << "\r     Done.\n";
+        std::clog << "\nDone.                           \n";
     }
 
   private:
