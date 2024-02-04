@@ -17,6 +17,21 @@ This is a learning exercise and barebones approach to software raytracing that's
 ##
 
 <h3>
+    Features
+</h3>
+
+ - Depth of field
+ - Materials:
+    - Lambertian diffuse: takes in attenuation color and realistically diffuses light
+    - Metal: takes in attenuation color and roughness and reflects light
+    - Dielectric: takes in index of refraction and attenuation color and refracts light, also has total internal reflection
+ - Anti-aliasing (samples each pixel multiple times)
+ - Camera position movement
+ - Ray bouncing
+
+##
+
+<h3>
     Current Render Status
 </h3>
 
