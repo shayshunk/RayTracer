@@ -15,6 +15,7 @@ int main(int argc, char* argv[])
     int depth = 50;
     int fieldOfView = 20;
     Vector3 lookFrom(13, 2, 3);
+    Ray r;
 
     // Using command line arguments for setting render quality
     for (int i = 0; i < argc; i++)
@@ -38,7 +39,7 @@ int main(int argc, char* argv[])
     auto groundMaterial = make_shared<Lambertian>(Color(0.1, 0.1, 0));
     world.Add(make_shared<Sphere>(Point3(0, -1000, -1), 1000, groundMaterial));
 
-    /* for (int a = 0; a < 11; a++)
+    for (int a = 0; a < 11; a++)
     {
         for (int b = 0; b < 11; b++)
         {
@@ -72,7 +73,7 @@ int main(int argc, char* argv[])
                 world.Add(make_shared<Sphere>(center, 0.2, sphereMaterial));
             }
         }
-    } */
+    }
 
     auto backMaterial = make_shared<Lambertian>(Color(0.8, 0.1, 0.1));
     auto middleMaterial = make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.03);
