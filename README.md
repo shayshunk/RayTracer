@@ -28,6 +28,8 @@ This is a learning exercise and barebones approach to software raytracing that's
  - Anti-aliasing (samples each pixel multiple times)
  - Camera position movement
  - Ray bouncing
+ - Motion blur
+ - Basic sphere animation (moving linearly)
  - Command line arguments:
     - `-Size 1200` gives an image that is 1200 pixels wide, like the image below
     - `-FOV 90` gives a 90 degree vertical field of view. The image below has an FOV of 20 degrees
