@@ -29,7 +29,8 @@ class Camera
 
         for (int i = 0; i < imageHeight; i++)
         {
-            std::clog << "\rScanlines remaining: " << (imageHeight - i) << "/" << imageHeight;
+            std::clog << "\rScanlines remaining: " << (imageHeight - i) << "/" << imageHeight
+                      << "      ";
             cout.flush();
 
             for (int j = 0; j < imageWidth; j++)
@@ -105,8 +106,9 @@ class Camera
 
         Point3 rayOrigin = (defocusAngle <= 0) ? center : DefocusDiskSample();
         Vector3 rayDirection = pixelSample - rayOrigin;
+        double rayTime = RandomDouble(0, 0.5);
 
-        return Ray(rayOrigin, rayDirection);
+        return Ray(rayOrigin, rayDirection, rayTime);
     }
 
     Vector3 PixelSampleSquare() const

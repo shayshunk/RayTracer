@@ -6,13 +6,22 @@
 class Sphere : public Hittable
 {
   public:
+    // Stationary sphere
     Sphere(Point3 _center, double _radius, shared_ptr<Material> _material)
-        : center(_center), radius(_radius), mat(_material)
+        : center1(_center), radius(_radius), mat(_material), isMoving(false)
     {
+    }
+
+    // Moving sphere
+    Sphere(Point3 _center1, Point3 _center2, double _radius, shared_ptr<Material> _material)
+        : center1(_center1), radius(_radius), mat(_material), isMoving(true)
+    {
+        centerVector = _center2 - _center1;
     }
 
     bool Hit(Ray const& r, Interval rayT, HitRecord& rec) const override
     {
+        Point3 center = isMoving ? Center(r.Time()) : center1;
         Vector3 oc = r.Origin() - center;
         auto a = r.Direction().LengthSquared();
         auto half_b = Dot(oc, r.Direction());
@@ -43,9 +52,18 @@ class Sphere : public Hittable
     }
 
   private:
-    Point3 center;
+    Point3 center1;
     double radius;
     shared_ptr<Material> mat;
+    bool isMoving;
+    Vector3 centerVector;
+
+    Point3 Center(double time) const
+    {
+        // Lerping from center1 to center2 with time
+        // t0 is at center1
+        return center1 + time * centerVector;
+    }
 };
 
 #endif

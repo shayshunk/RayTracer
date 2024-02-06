@@ -39,9 +39,9 @@ int main(int argc, char* argv[])
     auto groundMaterial = make_shared<Lambertian>(Color(0.1, 0.1, 0));
     world.Add(make_shared<Sphere>(Point3(0, -1000, -1), 1000, groundMaterial));
 
-    for (int a = 0; a < 11; a++)
+    for (int a = -11; a < 11; a++)
     {
-        for (int b = 0; b < 11; b++)
+        for (int b = -11; b < 11; b++)
         {
             double chooseMaterial = RandomDouble();
 
@@ -51,13 +51,17 @@ int main(int argc, char* argv[])
             {
                 shared_ptr<Material> sphereMaterial;
 
-                if (chooseMaterial < 0.5)  // Diffuse
+                if (chooseMaterial < 0.40)  // Diffuse
                 {
                     Color albedo = Color::Random() * Color::Random();
 
                     sphereMaterial = make_shared<Lambertian>(albedo);
+
+                    Point3 center2 = center + Vector3(0, RandomDouble(0, 0.5), 0);
+                    world.Add(make_shared<Sphere>(center, center2, 0.2, sphereMaterial));
+                    continue;
                 }
-                else if (chooseMaterial < 0.75)
+                else if (chooseMaterial < 0.70)
                 {
                     Color albedo = Color::Random(0.5, 1);
                     double fuzz = RandomDouble(0, 0.4);

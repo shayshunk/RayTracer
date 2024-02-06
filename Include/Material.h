@@ -31,7 +31,7 @@ class Lambertian : public Material
         if (scatterDirection.NearZero())
             scatterDirection = rec.normal;
 
-        scattered = Ray(rec.p, scatterDirection);
+        scattered = Ray(rec.p, scatterDirection, rIn.Time());
         attenuation = albedo;
 
         return true;
@@ -50,7 +50,7 @@ class Metal : public Material
     Scatter(Ray const& rIn, HitRecord const& rec, Color& attenuation, Ray& scattered) const override
     {
         Vector3 reflected = Reflect(UnitVector(rIn.Direction()), rec.normal);
-        scattered = Ray(rec.p, reflected + fuzz * RandomUnitVector());
+        scattered = Ray(rec.p, reflected + fuzz * RandomUnitVector(), rIn.Time());
         attenuation = albedo;
 
         return (Dot(scattered.Direction(), rec.normal) > 0);
@@ -87,7 +87,7 @@ class Dielectric : public Material
         else
             direction = Refract(unitDirection, rec.normal, refractionRatio);
 
-        scattered = Ray(rec.p, direction);
+        scattered = Ray(rec.p, direction, rIn.Time());
 
         return true;
     }
