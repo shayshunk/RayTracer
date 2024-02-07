@@ -57,9 +57,14 @@ int main(int argc, char* argv[])
 
                     sphereMaterial = make_shared<Lambertian>(albedo);
 
-                    Point3 center2 = center + Vector3(0, RandomDouble(0, 0.5), 0);
-                    world.Add(make_shared<Sphere>(center, center2, 0.2, sphereMaterial));
-                    continue;
+                    double chooseBounce = RandomDouble();
+
+                    if (chooseBounce < 0.5)
+                    {
+                        Point3 center2 = center + Vector3(0, RandomDouble(0, 0.5), 0);
+                        world.Add(make_shared<Sphere>(center, center2, 0.2, sphereMaterial));
+                        continue;
+                    }
                 }
                 else if (chooseMaterial < 0.70)
                 {
@@ -99,8 +104,8 @@ int main(int argc, char* argv[])
     camera.lookAt = Point3(0, 0, 0);
     camera.vUp = Vector3(0, 1, 0);
 
-    camera.defocusAngle = 0.6;
-    camera.focusDistance = 10;
+    camera.defocusAngle = 0.2;
+    camera.focusDistance = 8;
 
     camera.Render(world);
 
