@@ -23,6 +23,14 @@ class Interval
         return x;
     }
 
+    double Size() const { return max - min; }
+
+    Interval Expand(double delta) const
+    {
+        double padding = delta / 2;
+        return Interval(min - padding, max + padding);
+    }
+
     static Interval const empty, universe;
 };
 
