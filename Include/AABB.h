@@ -1,0 +1,58 @@
+#ifndef AABB_H
+#define AABB_H
+
+#include "RTWeekend.h"
+
+class BoundingBox
+{
+  public:
+    Interval x, y, z;
+
+    BoundingBox() {}  // Default is empty since intervals are empty by default
+
+    BoundingBox(Interval const& ix, Interval const& iy, Interval const& iz) : x(ix), y(iy), z(iz) {}
+
+    BoundingBox(Point3 const& a, Point3 const& b)
+    {
+        // Treat points a and b as extrema for bounding box
+        x = Interval(fmin(a[0], b[0]), fmax(a[0], b[0]));
+        y = Interval(fmin(a[1], b[1]), fmax(a[1], b[1]));
+        z = Interval(fmin(a[2], b[2]), fmax(a[2], b[2]));
+    }
+
+    Interval const& Axis(int n) const
+    {
+        if (n == 1)
+            return y;
+        if (n == 2)
+            return z;
+        return x;
+    }
+
+    bool Hit(Ray const& r, Interval rayT) const
+    {
+        for (int a = 0; a < 3; a++)
+        {
+            double invD = 1 / r.Direction()[a];
+            double orig = r.Origin()[a];
+
+            double t0 = (Axis(a).min - orig) * invD;
+            double t1 = (Axis(a).max - orig) * invD;
+
+            if (invD < 0)
+                std::swap(t0, t1);
+
+            if (t0 > rayT.min)
+                rayT.min = t0;
+            if (t1 < rayT.max)
+                rayT.max = t1;
+
+            if (rayT.max <= rayT.min)
+                return false;
+        }
+
+        return true;
+    }
+};
+
+#endif
