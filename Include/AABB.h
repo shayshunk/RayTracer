@@ -3,16 +3,16 @@
 
 #include "RTWeekend.h"
 
-class BoundingBox
+class AABB
 {
   public:
     Interval x, y, z;
 
-    BoundingBox() {}  // Default is empty since intervals are empty by default
+    AABB() {}  // Default is empty since intervals are empty by default
 
-    BoundingBox(Interval const& ix, Interval const& iy, Interval const& iz) : x(ix), y(iy), z(iz) {}
+    AABB(Interval const& ix, Interval const& iy, Interval const& iz) : x(ix), y(iy), z(iz) {}
 
-    BoundingBox(Point3 const& a, Point3 const& b)
+    AABB(Point3 const& a, Point3 const& b)
     {
         // Treat points a and b as extrema for bounding box
         x = Interval(fmin(a[0], b[0]), fmax(a[0], b[0]));
