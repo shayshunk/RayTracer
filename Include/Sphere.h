@@ -10,6 +10,8 @@ class Sphere : public Hittable
     Sphere(Point3 _center, double _radius, shared_ptr<Material> _material)
         : center1(_center), radius(_radius), mat(_material), isMoving(false)
     {
+        Vector3 radiusVec(radius, radius, radius);
+        bBox = AABB(center1 - radiusVec, center1 + radiusVec);
     }
 
     // Moving sphere
@@ -57,6 +59,7 @@ class Sphere : public Hittable
     shared_ptr<Material> mat;
     bool isMoving;
     Vector3 centerVector;
+    AABB bBox;
 
     Point3 Center(double time) const
     {
