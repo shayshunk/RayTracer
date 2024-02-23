@@ -10,6 +10,11 @@ class Interval
 
     Interval(double _min, double _max) : min(_min), max(_max) {}
 
+    Interval(Interval const& a, Interval const& b)
+        : min(fmin(a.min, b.min)), max(fmax(a.max, b.max))
+    {
+    }
+
     bool Contains(double x) const { return min <= x && x <= max; }
 
     bool Surrounds(double x) const { return min < x && x < max; }

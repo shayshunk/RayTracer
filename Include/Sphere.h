@@ -18,6 +18,11 @@ class Sphere : public Hittable
     Sphere(Point3 _center1, Point3 _center2, double _radius, shared_ptr<Material> _material)
         : center1(_center1), radius(_radius), mat(_material), isMoving(true)
     {
+        Vector3 radiusVec(radius, radius, radius);
+        AABB box1(_center1 - radiusVec, _center1 + radiusVec);
+        AABB box2(_center2 - radiusVec, _center2 + radiusVec);
+        bBox = AABB(box1, box2);
+
         centerVector = _center2 - _center1;
     }
 

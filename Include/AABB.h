@@ -20,6 +20,13 @@ class AABB
         z = Interval(fmin(a[2], b[2]), fmax(a[2], b[2]));
     }
 
+    AABB(AABB const& box0, AABB const& box1)
+    {
+        x = Interval(box0.x, box1.x);
+        y = Interval(box0.y, box1.y);
+        z = Interval(box0.z, box1.z);
+    }
+
     Interval const& Axis(int n) const
     {
         if (n == 1)
