@@ -20,6 +20,12 @@ inline double DegreesToRadians(double degrees)
     return degrees * pi / 180.0;
 }
 
+inline int RandomInt(int min, int max)
+{
+    // Returns a random integer in [min, max]
+    return static_cast<int>(RandomDouble(min, max + 1));
+}
+
 inline double RandomDouble()
 {
     // Returns a random real number in [0, 1)
