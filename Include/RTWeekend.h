@@ -20,12 +20,6 @@ inline double DegreesToRadians(double degrees)
     return degrees * pi / 180.0;
 }
 
-inline int RandomInt(int min, int max)
-{
-    // Returns a random integer in [min, max]
-    return static_cast<int>(RandomDouble(min, max + 1));
-}
-
 inline double RandomDouble()
 {
     // Returns a random real number in [0, 1)
@@ -38,8 +32,15 @@ inline double RandomDouble(double min, double max)
     return min + (max - min) * RandomDouble();
 }
 
+inline int RandomInt(int min, int max)
+{
+    // Returns a random integer in [min, max]
+    return static_cast<int>(RandomDouble(min, max + 1));
+}
+
 // Common includes
 
+#include "BVH.h"
 #include "Color.h"
 #include "Hittable.h"
 #include "HittableList.h"

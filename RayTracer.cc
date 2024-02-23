@@ -92,6 +92,8 @@ int main(int argc, char* argv[])
     world.Add(make_shared<Sphere>(Point3(0, 1, 0), 1.0, middleMaterial));
     world.Add(make_shared<Sphere>(Point3(4, 1, 0), 1.0, frontMaterial));
 
+    world = HittableList(make_shared<BVHNode>(world));
+
     Camera camera;
 
     camera.aspectRatio = 16.0 / 9.0;

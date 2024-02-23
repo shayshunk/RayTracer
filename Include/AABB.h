@@ -1,7 +1,9 @@
 #ifndef AABB_H
 #define AABB_H
 
+#include "Interval.h"
 #include "RTWeekend.h"
+#include "Ray.h"
 
 class AABB
 {
