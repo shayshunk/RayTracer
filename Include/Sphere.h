@@ -58,6 +58,8 @@ class Sphere : public Hittable
         return true;
     }
 
+    AABB BoundingBox() const override { return bBox; }
+
   private:
     Point3 center1;
     double radius;
