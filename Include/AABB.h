@@ -31,11 +31,15 @@ class AABB
 
     Interval const& Axis(int n) const
     {
-        if (n == 1)
-            return y;
-        if (n == 2)
-            return z;
-        return x;
+        switch (n)
+        {
+            case 1:
+                return y;
+            case 2:
+                return z;
+            default:
+                return x;
+        }
     }
 
     bool Hit(Ray const& r, Interval rayT) const

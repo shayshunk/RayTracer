@@ -163,7 +163,8 @@ inline Vector3 RandomInUnitDisk()
 
 inline Vector3 RandomUnitVector()
 {
-    Vector3 p = Vector3::Random(0, 1, 0, 2);
+    Vector3 p = Vector3::Random(0, 1, 0, 2);  // spherical distribution parameters
+
     p.e[0] = sin(p.e[1] * pi) * cos(p.e[2] * pi);
     p.e[1] = sin(p.e[1] * pi) * sin(p.e[2] * pi);
     p.e[2] = cos(p.e[1] * pi);
